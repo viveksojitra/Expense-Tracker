@@ -4,7 +4,13 @@ const Record = require('../models/transactionModel');
 const defaultController = async (req, res) => {
     try {
         const records = await Record.find();
-        res.render('index', { records });
+        let singleRecord = null;
+
+        if (req.query.id) {
+            singleRecord = await Record.findById(req.query.id);
+        }
+
+        res.render('index', { records, singleRecord });
     } catch (err) {
         console.error('Error fetching records:', err);
         res.status(500).send('Internal Server Error');
@@ -29,22 +35,6 @@ const addRecordController = async (req, res) => {
         res.redirect('/');
     } catch (err) {
         console.error('Error adding record:', err);
-        res.status(500).send('Internal Server Error');
-    }
-};
-
-// Controller to render the edit page for a specific record
-const editRecordController = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const singleRecord = await Record.findById(id);
-        if (singleRecord) {
-            res.render('editRecord', { singleRecord });
-        } else {
-            res.status(404).send('Record not found');
-        }
-    } catch (err) {
-        console.error('Error fetching record:', err);
         res.status(500).send('Internal Server Error');
     }
 };
@@ -93,7 +83,6 @@ const deleteRecordController = async (req, res) => {
 module.exports = {
     defaultController,
     addRecordController,
-    editRecordController,
     updateRecordController,
     deleteRecordController
 };
