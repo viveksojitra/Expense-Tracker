@@ -1,0 +1,8 @@
+::-webkit-scrollbar {
+    display: none;
+}
+
+.card-display{
+    max-height: 515px;
+    scroll-behavior: smooth;
+}
